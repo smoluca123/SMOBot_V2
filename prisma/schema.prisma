@@ -1,0 +1,14 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model guilds {
+  id     Int     @id @default(autoincrement())
+  guild  String? @db.VarChar(255)
+  prefix String? @db.VarChar(255)
+}
