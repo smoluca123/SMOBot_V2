@@ -2,17 +2,38 @@ const { SlashCommandBuilder } = require('discord.js');
 const openai = require('../../../apis/openaiAPI');
 const { getEmbedTemplate } = require('../../../global/embedTemplate');
 
+const modelChoices = [
+  {
+    name: 'Meta: Llama 3 70B Instruct',
+    value: 'meta-llama/llama-3-70b-instruct',
+  },
+  { name: 'MythoMax 13B', value: 'gryphe/mythomax-l2-13b' },
+  {
+    name: 'OpenAI: GPT-4o (Can Upload Image)',
+    value: 'openai/gpt-4o',
+    promptImg: true,
+  },
+  {
+    name: 'Google: Gemini Flash 1.5 (preview) (Can Upload Image)',
+    value: 'google/gemini-flash-1.5',
+    promptImg: true,
+  },
+  { name: 'Anthropic: Claude 3 Haiku', value: 'anthropic/claude-3-haiku' },
+];
+
+const modelCanUploadImg = modelChoices.filter((m) => !!m.promptImg);
+
 module.exports = {
   structure: new SlashCommandBuilder()
-    .setName('gpt4')
-    .setDescription('Chat With GPT-4 (Free)')
-    // .addStringOption((option) =>
-    //   option
-    //     .setName('model')
-    //     .setDescription('Choose a model.')
-    //     .setRequired(true)
-    //     .setChoices(...modelChoices)
-    // )
+    .setName('ai-chat')
+    .setDescription('Chat With multi AI')
+    .addStringOption((option) =>
+      option
+        .setName('model')
+        .setDescription('Choose a model.')
+        .setRequired(true)
+        .setChoices(...modelChoices)
+    )
     .addStringOption((option) =>
       option
         .setName('prompt')
@@ -42,19 +63,24 @@ module.exports = {
   run: async (client, interaction) => {
     try {
       const isPrivate = !+interaction.options.getString('answer-visibility');
+      const model = interaction.options.getString('model');
       const image = interaction.options.getAttachment('image');
+      const modelInfo = modelChoices.find((m) => m.value === model);
 
       await interaction.deferReply({
         ephemeral: isPrivate,
       });
+      const isModelCanHandleImg = !!modelCanUploadImg.find(
+        (m) => m.value === model
+      );
 
       const completion = await openai.chat.completions.create({
-        model: 'openai/gpt-4o',
+        model,
         messages: [
           {
             role: 'user',
             content: [
-              image && image.url
+              image && image.url && isModelCanHandleImg
                 ? {
                     type: 'image_url',
                     image_url: {
@@ -78,7 +104,9 @@ module.exports = {
       interaction.followUp({
         embeds: [
           getEmbedTemplate()
-            .setTitle(`GPT-4o - Response`)
+            .setTitle(
+              `${modelInfo.name.replace('(Can Upload Image)', '')} - Response`
+            )
             .addFields(
               {
                 name: 'Role : ',

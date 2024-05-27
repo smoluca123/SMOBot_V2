@@ -5,11 +5,8 @@ const {
   StringSelectMenuBuilder,
 } = require('discord.js');
 const ExtendedClient = require('../../class/ExtendedClient');
-const { default: OpenAI } = require('openai');
-const openai = new OpenAI({
-  baseURL: 'https://openrouter.ai/api/v1',
-  apiKey: process.env.OPENROUTER_KEY,
-});
+const openai = require('../../apis/openaiAPI');
+const { getEmbedTemplate } = require('../../global/embedTemplate');
 
 module.exports = {
   customId: 'gpt4-modal',
@@ -43,7 +40,7 @@ module.exports = {
 
     await interaction.followUp({
       embeds: [
-        new EmbedBuilder()
+        getEmbedTemplate()
           .setTitle('GPT-4o - Response')
           .addFields(
             {
@@ -56,13 +53,7 @@ module.exports = {
             },
             { name: 'Total tokens : ', value: usage.total_tokens + '' }
           )
-          .setDescription(choices[0].message.content)
-          .setColor('Aqua')
-          .setTimestamp()
-          .setFooter({
-            text: 'Power by SMOTeam',
-            iconURL: process.env.APP_ICON,
-          }),
+          .setDescription(`**${choices[0].message.content}**`),
       ],
     });
 
