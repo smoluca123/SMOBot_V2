@@ -65,6 +65,8 @@ module.exports = {
       const isPrivate = !+interaction.options.getString('answer-visibility');
       const model = interaction.options.getString('model');
       const image = interaction.options.getAttachment('image');
+      const prompt = interaction.options.getString('prompt');
+
       const modelInfo = modelChoices.find((m) => m.value === model);
 
       await interaction.deferReply({
@@ -79,18 +81,23 @@ module.exports = {
         messages: [
           {
             role: 'user',
-            content: [
-              image && image.url && isModelCanHandleImg
-                ? {
-                    type: 'image_url',
-                    image_url: {
-                      detail: 'low',
-                      url: image.url,
-                    },
-                  }
-                : { type: 'text', text: '' },
-              { type: 'text', text: interaction.options.getString('prompt') },
-            ],
+            content: isModelCanHandleImg
+              ? [
+                  image && image.url
+                    ? {
+                        type: 'image_url',
+                        image_url: {
+                          detail: 'low',
+                          url: image.url,
+                        },
+                      }
+                    : { type: 'text', text: '' },
+                  {
+                    type: 'text',
+                    text: prompt,
+                  },
+                ]
+              : prompt,
           },
         ],
       });
@@ -123,6 +130,7 @@ module.exports = {
         ephemeral: isPrivate, // Send this as an ephemeral message
       });
     } catch (error) {
+      console.log(error);
       interaction.followUp({
         content: 'Có lỗi xảy ra, vui lòng liên hệ BQT',
         ephemeral: true,
