@@ -90,7 +90,8 @@ module.exports = {
               },
               { name: 'Total tokens : ', value: usage.total_tokens + '' }
             )
-            .setDescription(`**${choices[0].message.content}**`),
+            .setDescription(`**${choices[0].message.content}**`)
+            .setImage(image?.url),
         ],
         ephemeral: isPrivate, // Send this as an ephemeral message
       });

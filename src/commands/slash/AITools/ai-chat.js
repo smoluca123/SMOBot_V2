@@ -14,8 +14,8 @@ const modelChoices = [
     promptImg: true,
   },
   {
-    name: 'Google: Gemini Flash 1.5 (preview) (Can Upload Image)',
-    value: 'google/gemini-flash-1.5',
+    name: 'Google: Gemini Pro 1.5 (preview) (Can Upload Image)',
+    value: 'google/gemini-pro-1.5',
     promptImg: true,
   },
   { name: 'Anthropic: Claude 3 Haiku', value: 'anthropic/claude-3-haiku' },
@@ -125,7 +125,8 @@ module.exports = {
               },
               { name: 'Total tokens : ', value: usage.total_tokens + '' }
             )
-            .setDescription(`**${choices[0].message.content}**`),
+            .setDescription(`**${choices[0].message.content}**`)
+            .setImage(image?.url),
         ],
         ephemeral: isPrivate, // Send this as an ephemeral message
       });

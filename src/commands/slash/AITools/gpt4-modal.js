@@ -32,9 +32,6 @@ module.exports = {
             .setPlaceholder('Nhập câu hỏi của bạn ở đây!')
             .setStyle(TextInputStyle.Short)
             .setRequired(true)
-        ),
-        new ActionRowBuilder().addComponents(
-          new AttachmentBuilder().setName('Chon anh')
         )
       );
 
