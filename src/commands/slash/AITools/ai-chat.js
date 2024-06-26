@@ -4,6 +4,14 @@ const { getEmbedTemplate } = require('../../../global/embedTemplate');
 
 const modelChoices = [
   {
+    name: 'Anthropic: Claude 3.5 Sonnet (New)',
+    value: 'anthropic/claude-3.5-sonnet',
+  },
+  {
+    name: 'AI21: Jamba Instruct (New)',
+    value: 'ai21/jamba-instruct',
+  },
+  {
     name: 'Meta: Llama 3 70B Instruct',
     value: 'meta-llama/llama-3-70b-instruct',
   },
