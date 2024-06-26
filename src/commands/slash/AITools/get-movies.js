@@ -27,7 +27,7 @@ module.exports = {
               .setStyle(TextInputStyle.Short)
               .setCustomId('movie-name')
               .setLabel('Tên phim')
-              .setPlaceholder('Nhập câu hỏi của bạn ở đây!')
+              .setPlaceholder('Nhập rõ tên phim, đầy đủ càng tốt!')
           )
         );
       await interaction.showModal(modal);
